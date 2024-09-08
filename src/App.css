@@ -46,7 +46,7 @@
   flex-direction: row;
   text-align: center;
   margin-right:0;
-  margin-bottom: 20px; /* Расстояние под графиками */
+  margin-bottom: 20px;
   height: 400px
 }
 
@@ -58,9 +58,9 @@
 }
 
 .combined-chart-container {
-  text-align: center; /* Выравнивание графика по центру */
-  width: 100%; /* Ширина объединенного графика на всю доступную ширину */
-  height: 400px; /* Высота объединенного графика */
+  text-align: center;
+  width: 100%;
+  height: 400px;
   margin-top: 100px;
 }
 
@@ -68,7 +68,6 @@
   margin-top: 40px;
 }
 
-/* src/App.css */
 
 .add-transaction-form {
   background: #f8f9fa;

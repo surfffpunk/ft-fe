@@ -1,12 +1,16 @@
-import '../assets//RegistrationPage.css';
+import '../assets/RegistrationPage.css';
 import React, { useState } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // Хук для перенаправления
 
-const RegistrationPage = () => {
+const RegistrationPage = ({ setIsRegistered }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate(); // Хук для навигации
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -14,7 +18,19 @@ const RegistrationPage = () => {
             alert('Пароли не совпадают');
             return;
         }
-        console.log('Регистрация успешна:', { username, email, password });
+
+        // Имитация отправки данных на бэкэнд
+        setIsLoading(true);
+        setTimeout(() => {
+            // Имитируем успешную регистрацию
+            console.log('Регистрация успешна:', { username, email, password });
+
+            // Устанавливаем состояние, что пользователь зарегистрирован
+            setIsRegistered(true);
+
+            // Перенаправляем на главную страницу
+            navigate('/');
+        }, 1500); // Тайм-аут для имитации запроса
     };
 
     return (
@@ -67,8 +83,13 @@ const RegistrationPage = () => {
                             />
                         </Form.Group>
 
-                        <Button variant="primary" type="submit" className="mt-4 w-100">
-                            Зарегистрироваться
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            className="mt-4 w-100"
+                            disabled={isLoading} // Отключаем кнопку, пока идет отправка
+                        >
+                            {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
                         </Button>
                     </Form>
                 </Card.Body>
