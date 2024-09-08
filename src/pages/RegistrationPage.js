@@ -1,7 +1,8 @@
+// src/components/RegistrationPage.js
 import '../assets/RegistrationPage.css';
 import React, { useState } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // Хук для перенаправления
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationPage = ({ setIsRegistered }) => {
     const [username, setUsername] = useState('');
@@ -9,8 +10,7 @@ const RegistrationPage = ({ setIsRegistered }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-    const navigate = useNavigate(); // Хук для навигации
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -24,18 +24,16 @@ const RegistrationPage = ({ setIsRegistered }) => {
         setTimeout(() => {
             // Имитируем успешную регистрацию
             console.log('Регистрация успешна:', { username, email, password });
-
-            // Устанавливаем состояние, что пользователь зарегистрирован
+            // Устанавливаем состояние регистрации и перенаправляем на страницу профиля
             setIsRegistered(true);
-
-            // Перенаправляем на главную страницу
-            navigate('/');
-        }, 1500); // Тайм-аут для имитации запроса
+            setIsLoading(false);
+            navigate('/profile');
+        }, 1000); // Задержка для имитации загрузки
     };
 
     return (
         <Container className="d-flex justify-content-center align-items-center my-5">
-            <Card className="p-4 shadow-lg rounded">
+            <Card className="p-4 shadow-lg rounded w-100" style={{ maxWidth: '500px' }}>
                 <Card.Body>
                     <h3 className="text-center mb-4">Регистрация</h3>
                     <Form onSubmit={handleSubmit}>
@@ -83,12 +81,7 @@ const RegistrationPage = ({ setIsRegistered }) => {
                             />
                         </Form.Group>
 
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            className="mt-4 w-100"
-                            disabled={isLoading} // Отключаем кнопку, пока идет отправка
-                        >
+                        <Button variant="primary" type="submit" className="mt-4 w-100" disabled={isLoading}>
                             {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
                         </Button>
                     </Form>

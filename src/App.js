@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import IncomeChart from './components/IncomeChart';
 import CombinedChart from './components/CombinedChart';
 import AddTransactionForm from './components/AddTransactionForm';
 import RegistrationPage from './pages/RegistrationPage';
+import ProfilePage from './pages/ProfilePage';
 import { getBalance, getTransactions, addTransaction as addTransactionAPI } from './services/api';
 
 const App = () => {
@@ -17,7 +19,7 @@ const App = () => {
     const [expensesByCategory, setExpensesByCategory] = useState({});
     const [incomeByType, setIncomeByType] = useState({});
     const [showAddForm, setShowAddForm] = useState(false);
-    const [isRegistered, setIsRegistered] = useState(false); // Состояние для проверки регистрации
+    const [isRegistered, setIsRegistered] = useState(false);
 
     useEffect(() => {
         if (isRegistered) {
@@ -83,40 +85,39 @@ const App = () => {
     return (
         <Router>
             <div>
-                <Header onAddTransaction={() => setShowAddForm(true)} />
+                {isRegistered && <Header onAddTransaction={() => setShowAddForm(true)} />}
                 <Routes>
                     <Route
                         path="/"
-                        element={
-                            isRegistered ? (
-                                <div className="container">
-                                    <Dashboard balance={balance} transactions={transactions} />
-                                    <div className="charts-container">
-                                        <div className="chart-container">
-                                            <ExpensesChart data={expensesByCategory} />
-                                        </div>
-                                        <div className="chart-container">
-                                            <IncomeChart data={incomeByType} />
-                                        </div>
+                        element={isRegistered ? (
+                            <div className="container">
+                                <Dashboard balance={balance} transactions={transactions} />
+                                <div className="charts-container">
+                                    <div className="chart-container">
+                                        <ExpensesChart data={expensesByCategory} />
                                     </div>
-                                    <div className="combined-chart-container">
-                                        <CombinedChart expensesData={expensesByCategory} incomeData={incomeByType} />
+                                    <div className="chart-container">
+                                        <IncomeChart data={incomeByType} />
                                     </div>
-                                    <div className="table-container">
-                                        <TransactionsTable transactions={transactions} />
-                                    </div>
-                                    <AddTransactionForm
-                                        show={showAddForm}
-                                        onHide={() => setShowAddForm(false)}
-                                        onAdd={handleAddTransaction}
-                                    />
                                 </div>
-                            ) : (
-                                <Navigate to="/register" />
-                            )
-                        }
+                                <div className="combined-chart-container">
+                                    <CombinedChart expensesData={expensesByCategory} incomeData={incomeByType} />
+                                </div>
+                                <div className="table-container">
+                                    <TransactionsTable transactions={transactions} />
+                                </div>
+                                <AddTransactionForm
+                                    show={showAddForm}
+                                    onHide={() => setShowAddForm(false)}
+                                    onAdd={handleAddTransaction}
+                                />
+                            </div>
+                        ) : (
+                            <Navigate to="/register" />
+                        )}
                     />
                     <Route path="/register" element={<RegistrationPage setIsRegistered={setIsRegistered} />} />
+                    <Route path="/profile" element={isRegistered ? <ProfilePage /> : <Navigate to="/register" />} />
                 </Routes>
             </div>
         </Router>
