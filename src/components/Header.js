@@ -1,10 +1,13 @@
 // src/components/Header.js
 import React from 'react';
 import { Button, Navbar, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ onAddTransaction }) => {
-    const handleRegisterClick = () => {
-        window.location.href = '/register';
+    const navigate = useNavigate();
+
+    const handleProfileClick = () => {
+        navigate('/profile'); // Перенаправление на страницу профиля
     };
 
     const handleAddTransactionClick = () => {
@@ -16,8 +19,8 @@ const Header = ({ onAddTransaction }) => {
             <Container>
                 <Navbar.Brand href="#home">Финансовый Трекер</Navbar.Brand>
                 <Navbar.Collapse className="justify-content-end">
-                    <Button variant="outline-light" className="me-2" onClick={handleRegisterClick}>
-                        Регистрация
+                    <Button variant="outline-light" className="me-2" onClick={handleProfileClick}>
+                        Профиль
                     </Button>
                     <Button variant="success" onClick={handleAddTransactionClick}>
                         Добавить транзакцию
