@@ -1,0 +1,35 @@
+.balance-transaction-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2b2b2b;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+.balance-title {
+    color: white;
+    margin: 0;
+}
+
+.balance-display {
+    color: white;
+    font-size: 1.2em;
+}
+
+.set-balance-button,
+.add-transaction-button {
+    background-color: #3a3a3a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.set-balance-button:hover,
+.add-transaction-button:hover {
+    background-color: #4a4a4a;
+}
+

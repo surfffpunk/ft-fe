@@ -1,0 +1,17 @@
+.expense-charts-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+.pie-chart {
+    background-color: #2b2b2b;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    width: 320px;
+    text-align: center;
+}
