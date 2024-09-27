@@ -1,33 +1,18 @@
-// src/components/Header.js
-import React from 'react';
-import { Button, Navbar, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
-const Header = ({ onAddTransaction }) => {
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../assets/Header.css';
+
+const Header = () => {
     const navigate = useNavigate();
 
-    const handleProfileClick = () => {
-        navigate('/profile'); // Перенаправление на страницу профиля
-    };
-
-    const handleAddTransactionClick = () => {
-        onAddTransaction();
-    };
-
     return (
-        <Navbar bg="dark" variant="dark" expand="lg">
-            <Container>
-                <Navbar.Brand href="#home">Финансовый Трекер</Navbar.Brand>
-                <Navbar.Collapse className="justify-content-end">
-                    <Button variant="outline-light" className="me-2" onClick={handleProfileClick}>
-                        Профиль
-                    </Button>
-                    <Button variant="success" onClick={handleAddTransactionClick}>
-                        Добавить транзакцию
-                    </Button>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
+        <header className="header">
+            <h1 className="header-title">Финансовый Трекер</h1>
+            <button className="header-button" onClick={() => navigate('/profile')}>
+                Профиль
+            </button>
+        </header>
     );
 };
 

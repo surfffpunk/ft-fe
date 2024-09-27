@@ -1,4 +1,5 @@
 // src/services/api.js
+
 export const mockBalance = 5000;
 
 export const mockTransactions = [
@@ -11,8 +12,24 @@ export const mockTransactions = [
     { id: 7, amount: 300, date: '2024-09-09', category: 'Инвестиции', type: 'Доход' },
 ];
 
-export const getBalance = () => Promise.resolve({ data: mockBalance });
+let currentBalance = mockBalance;
+
 export const getTransactions = () => Promise.resolve({ data: mockTransactions });
+
+export const getBalance = () => Promise.resolve(currentBalance);
+
+export const updateBalance = (newBalance) => {
+    currentBalance = newBalance;
+    return Promise.resolve(currentBalance);
+};
+
+export const registerUser = (userData) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(userData);
+        }, 1000);
+    });
+};
 
 
 export const addTransaction = (transaction) => {
