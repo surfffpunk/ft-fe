@@ -1,4 +1,3 @@
-// src/pages/RegistrationPage.js
 import '../assets/RegistrationPage.css';
 import React, { useState } from 'react';
 import { Form, Container, Card, Spinner } from 'react-bootstrap';

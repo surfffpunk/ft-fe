@@ -1,5 +1,3 @@
-// src/services/api.js
-
 export const mockBalance = 5000;
 
 export const mockTransactions = [

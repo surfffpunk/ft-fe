@@ -15,10 +15,10 @@ const TransactionsTable = ({ transactions }) => {
 
     return (
         <div className="transactions-table-container">
-            {/* Заголовок таблицы */}
+            {}
             <h2 className="transactions-table-title">Таблица транзакций</h2>
 
-            {/* Фильтры */}
+            {}
             <div className="filters">
                 <label>
                     Тип:

@@ -14,7 +14,7 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
     });
 
     const handleSetBalance = () => {
-        setShowBalanceModal(true); // Открываем модальное окно для ввода баланса
+        setShowBalanceModal(true);
     };
 
     const handleAddTransaction = () => {
@@ -26,7 +26,7 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
     const handleSaveBalance = () => {
         if (balance && !isNaN(balance)) {
             setBalance(Number(balance));
-            setShowBalanceModal(false); // Закрываем модальное окно
+            setShowBalanceModal(false);
         }
     };
 

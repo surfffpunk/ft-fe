@@ -4,7 +4,7 @@ import '../assets/HomePage.css';
 import TransactionsTable from '../components/TransactionsTable';
 import BalanceAndTransaction from '../components/BalanceAndTransaction';
 import ExpenseCharts from '../components/ExpenseCharts';
-import SideMenu from '../components/SideMenu'; // Импортируем боковое меню
+import SideMenu from '../components/SideMenu';
 import { getTransactions, addTransaction as addTransactionAPI, getBalance, updateBalance, mockTransactions } from '../services/api';
 
 const HomePage = ({ isRegistered }) => {

@@ -25,22 +25,37 @@ const ExpenseCharts = ({ balance, expenses }) => {
 
     const totalExpenses = filteredExpenses.reduce((acc, tx) => acc + tx.amount, 0);
 
+    const options = {
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white', // Цвет текста легенды
+                },
+            },
+        },
+    };
+
     return (
         <div className="expense-charts-container">
             <div className="pie-chart">
                 <h4>Распределение расходов по категориям</h4>
-                <Pie data={data} />
+                <Pie data={data} options={options} />
             </div>
             <div className="pie-chart">
                 <h4>Расходы относительно текущего баланса</h4>
-                <Pie data={{
-                    labels: ['Расходы', 'Остаток'],
-                    datasets: [{
-                        data: [totalExpenses, balance - totalExpenses],
-                        backgroundColor: ['#FF6384', '#36A2EB'],
-                        hoverBackgroundColor: ['#FF6384', '#36A2EB'],
-                    }],
-                }} />
+                <Pie
+                    data={{
+                        labels: ['Расходы', 'Остаток'],
+                        datasets: [
+                            {
+                                data: [totalExpenses, balance - totalExpenses],
+                                backgroundColor: ['#FF6384', '#36A2EB'],
+                                hoverBackgroundColor: ['#FF6384', '#36A2EB'],
+                            },
+                        ],
+                    }}
+                    options={options}
+                />
             </div>
         </div>
     );

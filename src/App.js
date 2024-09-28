@@ -8,7 +8,7 @@ import RegistrationPage from './pages/RegistrationPage';
 
 const App = () => {
     const [isRegistered, setIsRegistered] = useState(false);
-    const [userData, setUserData] = useState({}); // State to hold user data
+    const [userData, setUserData] = useState({});
 
 
     return (

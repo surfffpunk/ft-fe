@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Container, Card, Form, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Card, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import '../assets/ProfilePage.css';
 
