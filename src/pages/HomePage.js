@@ -5,7 +5,7 @@ import TransactionsTable from '../components/TransactionsTable';
 import BalanceAndTransaction from '../components/BalanceAndTransaction';
 import ExpenseCharts from '../components/ExpenseCharts';
 import SideMenu from '../components/SideMenu';
-import { getTransactions, addTransaction as addTransactionAPI, getBalance, updateBalance, mockTransactions } from '../services/api';
+import { getTransactions, addTransaction as addTransactionAPI, getBalance, updateBalance } from '../services/api';
 
 const HomePage = ({ isRegistered }) => {
     const [transactions, setTransactions] = useState([]);
@@ -13,28 +13,34 @@ const HomePage = ({ isRegistered }) => {
 
     useEffect(() => {
         if (isRegistered) {
-            getTransactions().then(response => {
-                setTransactions(response.data);
-            });
+            const fetchData = async () => {
+                try {
+                    const responseTransactions = await getTransactions();
+                    setTransactions(responseTransactions.data);
 
-            getBalance().then(currentBalance => {
-                setBalance(currentBalance);
-            });
-        } else {
-            setTransactions(mockTransactions);
-            setBalance(5000);
+                    const currentBalance = await getBalance();
+                    setBalance(currentBalance);
+                } catch (error) {
+                    console.error("Ошибка при получении данных:", error);
+                }
+            };
+            fetchData();
         }
     }, [isRegistered]);
 
-    const handleAddTransaction = (newTransaction) => {
-        const transactionWithId = { id: transactions.length + 1, ...newTransaction, date: new Date(newTransaction.date) };
-        setTransactions([...transactions, transactionWithId]);
-        addTransactionAPI(transactionWithId);
+    const handleAddTransaction = async (newTransaction) => {
+        const transactionWithId = { ...newTransaction, date: new Date(newTransaction.date) };
 
-        const updatedBalance = balance + newTransaction.amount;
-        updateBalance(updatedBalance).then(newBalance => {
-            setBalance(newBalance);
-        });
+        try {
+            await addTransactionAPI(transactionWithId);
+            setTransactions(prevTransactions => [...prevTransactions, transactionWithId]);
+
+            const updatedBalance = balance + newTransaction.amount;
+            await updateBalance(updatedBalance);
+            setBalance(updatedBalance);
+        } catch (error) {
+            console.error("Ошибка при добавлении транзакции:", error);
+        }
     };
 
     return (
@@ -42,7 +48,7 @@ const HomePage = ({ isRegistered }) => {
             <Header />
 
             <div className="main-content">
-                <SideMenu /> {}
+                <SideMenu />
 
                 <div className="content">
                     <div id="current-balance" className="balance-transaction-wrapper">

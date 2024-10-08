@@ -11,12 +11,12 @@
 .main-content {
     display: flex;
     margin-top: 20px;
-    flex-grow: 1; /* Позволяет контенту занимать всё доступное пространство */
+    flex-grow: 1;
 }
 
 .content {
     flex-grow: 1;
-    padding-left: 220px; /* Оставляем отступ для SideMenu */
+    padding-left: 220px;
     width: 100%;
 }
 
@@ -91,6 +91,27 @@
     }
 
     .pie-chart {
+        width: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .homepage-container {
+        padding: 10px;
+    }
+
+    .main-content {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .content {
+        padding-left: 0;
+    }
+
+    .balance-transaction-wrapper,
+    .table-container,
+    #charts {
+        padding: 10px;
         width: 100%;
     }
 }

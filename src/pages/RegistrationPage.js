@@ -2,7 +2,7 @@ import '../assets/RegistrationPage.css';
 import React, { useState } from 'react';
 import { Form, Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../services/api';
+import axios from 'axios';
 
 const RegistrationPage = ({ setIsRegistered, setUserData }) => {
     const [username, setUsername] = useState('');
@@ -12,7 +12,7 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             alert('Пароли не совпадают');
@@ -21,13 +21,23 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
 
         setIsLoading(true);
 
-        registerUser({ username, email, password }).then(userData => {
-            console.log('Регистрация успешна:', userData);
-            setUserData(userData);
+        try {
+            const response = await axios.post('http://localhost:8080/api/register', {
+                username,
+                email,
+                password
+            });
+
+            console.log('Регистрация успешна:', response.data);
+            setUserData(response.data);
             setIsRegistered(true);
-            setIsLoading(false);
             navigate('/profile');
-        });
+        } catch (error) {
+            console.error('Ошибка регистрации:', error);
+            alert('Ошибка регистрации, попробуйте еще раз');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -86,12 +96,11 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
                             </Form.Group>
 
                             <button
-                                className="registration-btn mt-4 w-100 "
+                                className="registration-btn mt-4 w-100"
                                 disabled={isLoading}
                             >
                                 {isLoading ? <Spinner animation="border" size="sm" /> : 'Зарегистрироваться'}
                             </button>
-
                         </Form>
                     </Card.Body>
                 </div>

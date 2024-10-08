@@ -44,3 +44,13 @@
 .registration-btn.hover {
     background-color: #5a5a5a;
 }
+@media (max-width: 768px) {
+    .registration-card {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .registration-title {
+        font-size: 1.4rem;
+    }
+}

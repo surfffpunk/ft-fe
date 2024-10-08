@@ -34,3 +34,20 @@
 .balance-transaction-wrapper {
     margin-top: 60px;
 }
+@media (max-width: 768px) {
+    .header {
+        padding: 0.5rem 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-title {
+        font-size: 1.2rem;
+    }
+
+    .header-button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+

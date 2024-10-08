@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 import '../assets/BalanceAndTransaction.css';
 
 const BalanceAndTransaction = ({ onAddTransaction }) => {
-    const [balance, setBalance] = useState('');
-    const [showBalanceModal, setShowBalanceModal] = useState(false);
+    const [wallet, setWallet] = useState({ name: '', balance: 0 });
     const [showTransactionModal, setShowTransactionModal] = useState(false);
     const [transactionDetails, setTransactionDetails] = useState({
         category: '',
@@ -13,34 +13,31 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
         date: new Date().toISOString().slice(0, 10),
     });
 
-    const handleSetBalance = () => {
-        setShowBalanceModal(true);
-    };
+
+    useEffect(() => {
+        axios.get('/api/wallet')
+            .then(response => setWallet(response.data))
+            .catch(error => console.error('Ошибка при получении данных кошелька:', error));
+    }, []);
 
     const handleAddTransaction = () => {
-        onAddTransaction(transactionDetails);
-        setShowTransactionModal(false);
-        setTransactionDetails({ category: '', type: 'Доход', amount: '', date: new Date().toISOString().slice(0, 10) }); // Сбросить поля формы
-    };
-
-    const handleSaveBalance = () => {
-        if (balance && !isNaN(balance)) {
-            setBalance(Number(balance));
-            setShowBalanceModal(false);
-        }
+        axios.post('/api/transactions', {
+            ...transactionDetails,
+            walletId: wallet.id,
+        })
+            .then(() => {
+                onAddTransaction(transactionDetails);
+                setShowTransactionModal(false);
+                setTransactionDetails({ category: '', type: 'Доход', amount: '', date: new Date().toISOString().slice(0, 10) });
+            })
+            .catch(error => console.error('Ошибка при добавлении транзакции:', error));
     };
 
     return (
         <div className="balance-transaction-container">
-            <div className="balance-section">
-                <h4 className="balance-title">Текущий баланс</h4>
-                {!balance ? (
-                    <button className="set-balance-button" onClick={handleSetBalance}>
-                        Установить баланс
-                    </button>
-                ) : (
-                    <div className="balance-display">Баланс: ${balance}</div>
-                )}
+            <div className="wallet-info-section">
+                <h4 className="wallet-name">{wallet.name}</h4>
+                <div className="wallet-balance">Баланс: ${wallet.balance}</div>
             </div>
 
             <div className="transaction-section">
@@ -49,35 +46,6 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
                 </button>
             </div>
 
-            {/* Модальное окно для установки баланса */}
-            <Modal show={showBalanceModal} onHide={() => setShowBalanceModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Установить начальный баланс</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="formBalance">
-                            <Form.Label>Начальный баланс</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder="Введите начальный баланс"
-                                value={balance}
-                                onChange={(e) => setBalance(e.target.value)}
-                            />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowBalanceModal(false)}>
-                        Закрыть
-                    </Button>
-                    <Button variant="primary" onClick={handleSaveBalance}>
-                        Установить баланс
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-            {/* Модальное окно для добавления транзакции */}
             <Modal show={showTransactionModal} onHide={() => setShowTransactionModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Добавить транзакцию</Modal.Title>

@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import '../assets/TransactionsTable.css';
 
-const TransactionsTable = ({ transactions }) => {
+const TransactionsTable = () => {
+    const [transactions, setTransactions] = useState([]);
     const [filterType, setFilterType] = useState('Все');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
+    // Получаем транзакции с бэкэнда
+    useEffect(() => {
+        axios.get('/api/transactions') // Замените на реальный URL вашего бэкэнда
+            .then(response => setTransactions(response.data))
+            .catch(error => console.error('Ошибка при получении транзакций:', error));
+    }, []);
+
+    // Фильтруем транзакции
     const filteredTransactions = transactions.filter((tx) => {
         const txDate = new Date(tx.date);
         const inDateRange = (!startDate || txDate >= new Date(startDate)) && (!endDate || txDate <= new Date(endDate));
@@ -15,10 +25,8 @@ const TransactionsTable = ({ transactions }) => {
 
     return (
         <div className="transactions-table-container">
-            {}
             <h2 className="transactions-table-title">Таблица транзакций</h2>
 
-            {}
             <div className="filters">
                 <label>
                     Тип:
