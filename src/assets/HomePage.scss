@@ -1,12 +1,22 @@
-.homepage-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #1f1f1f;
-    padding: 20px;
-    gap: 20px;
-}
+$bg-color: #1f1f1f;
+$card-bg-color: #2b2b2b;
+$table-border-color: #3e3e3e;
+$th-bg-color: #3a3a3a;
+$hover-color: #4a4a4a;
+$text-color: #ffffff;
+$button-color: #ffffff;
+$button-hover-color: #5a5a5a;
+$shadow-color: rgba(0, 0, 0, 0.2);
+
+   .homepage-container {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       min-height: 100vh;
+       background-color: $bg-color;
+       padding: 20px;
+       gap: 20px;
+   }
 
 .main-content {
     display: flex;
@@ -24,34 +34,34 @@
 .table-container,
 #charts {
     width: 100%;
-    max-width: 1400px; /* Устанавливаем одинаковую максимальную ширину */
-    background-color: #2b2b2b;
+    max-width: 1400px;
+    background-color: $card-bg-color;
     border-radius: 8px;
     padding: 20px;
-    color: white;
+    color: $text-color;
     margin-bottom: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px $shadow-color;
 }
 
 .transactions-table {
     width: 100%;
     border-collapse: collapse;
-    color: #ffffff;
+    color: $text-color;
 }
 
 .transactions-table th,
 .transactions-table td {
     padding: 12px;
-    border: 1px solid #3e3e3e;
+    border: 1px solid $table-border-color;
     text-align: left;
 }
 
 .transactions-table th {
-    background-color: #3a3a3a;
+    background-color: $th-bg-color;
 }
 
 .transactions-table tbody tr:hover {
-    background-color: #4a4a4a;
+    background-color: $hover-color;
 }
 
 .expense-charts-container {
@@ -61,39 +71,19 @@
     width: 100%;
     max-width: 1400px;
     margin-top: 20px;
-    gap: 20px; /* Расстояние между графиками */
+    gap: 20px;
 }
 
 .pie-chart {
-    background-color: #2b2b2b;
+    background-color: $card-bg-color;
     padding: 20px;
     border-radius: 8px;
-    color: white;
+    color: $text-color;
     width: 320px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px $shadow-color;
 }
 
-@media (max-width: 768px) {
-    .homepage-container {
-        padding: 10px;
-    }
-
-    .balance-transaction-wrapper,
-    .table-container,
-    .expense-charts-container {
-        max-width: 100%;
-        padding: 10px;
-    }
-
-    .expense-charts-container {
-        flex-direction: column;
-    }
-
-    .pie-chart {
-        width: 100%;
-    }
-}
 @media (max-width: 768px) {
     .homepage-container {
         padding: 10px;
@@ -110,8 +100,17 @@
 
     .balance-transaction-wrapper,
     .table-container,
-    #charts {
+    #charts,
+    .expense-charts-container {
+        max-width: 100%;
         padding: 10px;
+    }
+
+    .expense-charts-container {
+        flex-direction: column;
+    }
+
+    .pie-chart {
         width: 100%;
     }
 }

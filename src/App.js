@@ -1,5 +1,5 @@
 // App.js
-import './assets/HomePage.css';
+import './assets/HomePage.scss';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';

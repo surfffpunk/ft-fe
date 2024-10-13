@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, OverlayTrigger, Tooltip, Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../assets/ProfilePage.css';
+import { getUserById, getAllWallets, uploadProfilePicture, createWallet } from '../services/api'; // импортируйте ваши API-функции
+import '../assets/ProfilePage.scss';
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState({});
@@ -10,44 +10,48 @@ const ProfilePage = () => {
     const [showWalletModal, setShowWalletModal] = useState(false);
     const [walletName, setWalletName] = useState('');
     const [walletBalance, setWalletBalance] = useState('');
-    const [wallets, setWallets] = useState([]); // Состояние для хранения кошельков
+    const [wallets, setWallets] = useState([]);
     const navigate = useNavigate();
 
-    // Получение данных профиля
     useEffect(() => {
-        axios.get('/api/profile')
-            .then(response => {
-                setUserData(response.data);
-                return axios.get('/api/wallets');
-            })
-            .then(response => {
-                setWallets(response.data);
-            })
-            .catch(error => console.error('Ошибка при загрузке профиля:', error));
+        const fetchUserData = async () => {
+            try {
+                const userResponse = await getUserById();
+                setUserData(userResponse.data);
+
+                const walletsResponse = await getAllWallets();
+                setWallets(walletsResponse.data);
+            } catch (error) {
+                console.error('Ошибка при загрузке профиля:', error);
+            }
+        };
+
+        fetchUserData();
     }, []);
 
-    const handleProfilePictureChange = (e) => {
+    const handleProfilePictureChange = async (e) => {
         const file = e.target.files[0];
         setProfilePicture(URL.createObjectURL(file));
 
-        // Отправка фото профиля на сервер
         const formData = new FormData();
         formData.append('profilePicture', file);
 
-        axios.post('/api/profile/upload-photo', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        })
-            .then(() => console.log('Фото профиля обновлено'))
-            .catch(error => console.error('Ошибка при обновлении фото профиля:', error));
+        try {
+            await uploadProfilePicture(formData);
+            console.log('Фото профиля обновлено');
+        } catch (error) {
+            console.error('Ошибка при обновлении фото профиля:', error);
+        }
     };
 
-    const handleWalletSubmit = () => {
-        axios.post('/api/wallet', { walletName, walletBalance })
-            .then(response => {
-                setWallets([...wallets, response.data]); // Обновляем состояние кошельков
-                setShowWalletModal(false);
-            })
-            .catch(error => console.error('Ошибка при добавлении кошелька:', error));
+    const handleWalletSubmit = async () => {
+        try {
+            const response = await createWallet({ walletName, walletBalance });
+            setWallets([...wallets, response.data]);
+            setShowWalletModal(false);
+        } catch (error) {
+            console.error('Ошибка при добавлении кошелька:', error);
+        }
     };
 
     return (

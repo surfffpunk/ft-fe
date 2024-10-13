@@ -12,7 +12,7 @@ const ExpenseCharts = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('/api/transactions')
+        axios.get('/operations/all')
             .then(response => {
                 const transactions = response.data;
                 setExpenses(transactions.filter(tx => tx.type === 'Расход'));
@@ -20,7 +20,7 @@ const ExpenseCharts = () => {
             .catch(error => setError('Ошибка при получении данных о транзакциях'))
             .finally(() => setIsLoading(false));
 
-        axios.get('/api/balance')
+        axios.get('/wallets/balance')
             .then(response => setBalance(response.data.balance))
             .catch(error => setError('Ошибка при получении данных о балансе'));
     }, []);

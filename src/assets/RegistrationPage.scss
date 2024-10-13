@@ -1,0 +1,66 @@
+$background-color: #1c1c1c;
+$card-color: #2a2a2a;
+$input-bg-color: #3a3a3a;
+$placeholder-color: #aaaaaa;
+$btn-bg-color: #fff;
+$btn-hover-bg-color: #5a5a5a;
+$text-color: #ffffff;
+$btn-text-color: #1a1a1a;
+
+.registration-container {
+    background-color: $background-color;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .registration-card {
+        background-color: $card-color;
+        border-radius: 10px;
+        padding: 2rem;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+        .registration-title {
+            color: $text-color;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .registration-input {
+            background-color: $input-bg-color;
+            border: 1px solid #444;
+            color: $text-color;
+
+            &::placeholder {
+                color: $placeholder-color;
+            }
+        }
+
+        .registration-btn {
+            padding: 0.5rem 1rem;
+            background-color: $btn-bg-color;
+            color: $btn-text-color;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: $btn-hover-bg-color;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .registration-card {
+        width: 90%;
+        padding: 1.5rem;
+
+        .registration-title {
+            font-size: 1.4rem;
+        }
+    }
+}

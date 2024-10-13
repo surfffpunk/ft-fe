@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
-import '../assets/BalanceAndTransaction.css';
+import '../assets/BalanceAndTransaction.scss';
 
 const BalanceAndTransaction = ({ onAddTransaction }) => {
     const [wallet, setWallet] = useState({ name: '', balance: 0 });
@@ -15,13 +15,13 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
 
 
     useEffect(() => {
-        axios.get('/api/wallet')
+        axios.get('/wallet/balance')
             .then(response => setWallet(response.data))
             .catch(error => console.error('Ошибка при получении данных кошелька:', error));
     }, []);
 
     const handleAddTransaction = () => {
-        axios.post('/api/transactions', {
+        axios.post('/operations/all', {
             ...transactionDetails,
             walletId: wallet.id,
         })

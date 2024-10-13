@@ -1,0 +1,96 @@
+$table-bg-color: #2a2a2a;
+$table-header-color: #3a3a3a;
+$table-border-color: #444;
+$table-row-hover-color: #444;
+$table-row-even-color: #333;
+$table-row-odd-color: #2a2a2a;
+$text-color: #ffffff;
+$subdued-text-color: #999;
+$filter-bg-color: #444;
+$filter-border-color: #555;
+$filter-border-focus-color: #777;
+$font-family: 'Arial', sans-serif;
+
+   .transactions-table-container {
+       padding: 20px;
+       max-width: 100%;
+       overflow-x: auto;
+       background-color: $table-bg-color;
+
+       @media (max-width: 768px) {
+           padding: 10px;
+       }
+   }
+
+   .transactions-table {
+       width: 100%;
+       border-collapse: collapse;
+       background-color: $table-bg-color;
+       color: $text-color;
+       font-family: $font-family;
+
+       th, td {
+           padding: 12px 15px;
+           border: 1px solid $table-border-color;
+           text-align: left;
+       }
+
+       th {
+           background-color: $table-header-color;
+           font-weight: bold;
+       }
+
+       tbody tr:nth-child(even) {
+           background-color: $table-row-even-color;
+       }
+
+       tbody tr:nth-child(odd) {
+           background-color: $table-row-odd-color;
+       }
+
+       tbody tr:hover {
+           background-color: $table-row-hover-color;
+       }
+
+       @media (max-width: 768px) {
+           font-size: 14px;
+       }
+   }
+
+   .transactions-table-title {
+       color: $text-color;
+       margin-bottom: 15px;
+       text-align: left;
+       font-size: 24px;
+   }
+
+   .no-transactions {
+       text-align: center;
+       color: $subdued-text-color;
+   }
+
+   .filters {
+       display: flex;
+       justify-content: flex-start;
+       gap: 15px;
+       margin-bottom: 15px;
+
+       @media (max-width: 768px) {
+           flex-direction: column;
+           gap: 10px;
+       }
+   }
+
+   .filter-select, .filter-input {
+       padding: 5px 10px;
+       background-color: $filter-bg-color;
+       color: $text-color;
+       border: 1px solid $filter-border-color;
+       border-radius: 4px;
+       transition: border-color 0.3s;
+
+       &:focus {
+           outline: none;
+           border-color: $filter-border-focus-color;
+       }
+   }

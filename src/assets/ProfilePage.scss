@@ -1,0 +1,88 @@
+$background-color: #1c1c1c;
+$card-bg-color: #1c1c1d;
+$picture-bg-color: #3a3a3a;
+$text-color: #ffffff;
+$input-bg-color: #3a3a3a;
+$border-color: #444;
+$button-bg-color: #fff;
+$button-hover-color: #5a5a5a;
+$button-text-color: #1a1a1a;
+
+.profile-page-container {
+    background-color: $background-color;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .profile-card {
+        background-color: $card-bg-color;
+        border-radius: 10px;
+        padding: 2rem;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+        .profile-title {
+            color: $text-color;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+
+            .profile-picture,
+            .profile-placeholder {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: $picture-bg-color;
+                object-fit: cover;
+            }
+        }
+
+        .form-label {
+            color: $text-color;
+        }
+
+        .form-control {
+            background-color: $input-bg-color;
+            border: 1px solid $border-color;
+            color: $text-color;
+        }
+
+        .add-wallet-button,
+        .analytics-button {
+            padding: 0.5rem 1rem;
+            background-color: $button-bg-color;
+            color: $button-text-color;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: $button-hover-color;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        width: 90%;
+        padding: 1rem;
+
+        .profile-title {
+            font-size: 1.2rem;
+        }
+
+        .profile-picture-container .profile-picture {
+            width: 80px;
+            height: 80px;
+        }
+    }
+}

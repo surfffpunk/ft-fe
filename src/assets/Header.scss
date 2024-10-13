@@ -1,10 +1,16 @@
+$header-bg-color: #1a1a1a;
+$header-text-color: #fff;
+$button-bg-color: #fff;
+$button-text-color: #1a1a1a;
+$button-hover-color: #ddd;
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #1a1a1a;
-    color: #fff;
+    background-color: $header-bg-color;
+    color: $header-text-color;
     position: fixed;
     top: 0;
     left: 0;
@@ -19,21 +25,18 @@
 
 .header-button {
     padding: 0.5rem 1rem;
-    background-color: #fff;
-    color: #1a1a1a;
+    background-color: $button-bg-color;
+    color: $button-text-color;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    &:hover {
+        background-color: $button-hover-color;
+    }
 }
 
-.header-button:hover {
-    background-color: #ddd;
-}
-
-.balance-transaction-wrapper {
-    margin-top: 60px;
-}
 @media (max-width: 768px) {
     .header {
         padding: 0.5rem 1rem;
@@ -51,3 +54,6 @@
     }
 }
 
+.balance-transaction-wrapper {
+    margin-top: 60px;
+}

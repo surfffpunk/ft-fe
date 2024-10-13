@@ -1,3 +1,6 @@
+$chart-bg-color: #2b2b2b;
+$chart-text-color: #ffffff;
+
 .expense-charts-container {
     display: flex;
     justify-content: space-around;
@@ -5,25 +8,25 @@
     width: 100%;
     max-width: 1200px;
     margin-top: 20px;
-}
+    gap: 20px;
 
-.pie-chart {
-    background-color: #2b2b2b;
-    padding: 20px;
-    border-radius: 8px;
-    color: white;
-    width: 320px;
-    text-align: center;
-}
-@media (max-width: 768px) {
-    .expense-charts-container {
+    @media (max-width: 768px) {
         flex-direction: column;
         align-items: center;
     }
+}
 
-    .pie-chart {
+.pie-chart {
+    background-color: $chart-bg-color;
+    padding: 20px;
+    border-radius: 8px;
+    color: $chart-text-color;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    @media (max-width: 768px) {
         width: 100%;
         max-width: 320px;
     }
 }
-

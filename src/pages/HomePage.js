@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import '../assets/HomePage.css';
+import '../assets/HomePage.scss';
 import TransactionsTable from '../components/TransactionsTable';
 import BalanceAndTransaction from '../components/BalanceAndTransaction';
 import ExpenseCharts from '../components/ExpenseCharts';
 import SideMenu from '../components/SideMenu';
-import { getTransactions, addTransaction as addTransactionAPI, getBalance, updateBalance } from '../services/api';
+import {
+    getAllOperations as getTransactions,
+    getWalletById as getBalance,
+    createOperation as addTransactionAPI,
+    updateWallet as updateBalance
+} from '../services/api';
 
 const HomePage = ({ isRegistered }) => {
     const [transactions, setTransactions] = useState([]);

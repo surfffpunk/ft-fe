@@ -1,8 +1,8 @@
-import '../assets/RegistrationPage.css';
+import '../assets/RegistrationPage.scss';
 import React, { useState } from 'react';
 import { Form, Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import {registerUser} from '../services/api';
 
 const RegistrationPage = ({ setIsRegistered, setUserData }) => {
     const [username, setUsername] = useState('');
@@ -22,7 +22,7 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:8080/api/register', {
+            const response = await registerUser({
                 username,
                 email,
                 password
@@ -48,7 +48,6 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
                         <h3 className="registration-title">Регистрация</h3>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="formUsername">
-                                <Form.Label>Имя пользователя</Form.Label>
                                 <Form.Control
                                     type="text"
                                     placeholder="Введите имя пользователя"
@@ -60,7 +59,6 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
                             </Form.Group>
 
                             <Form.Group controlId="formEmail" className="mt-3">
-                                <Form.Label>Email</Form.Label>
                                 <Form.Control
                                     type="email"
                                     placeholder="Введите email"
@@ -72,7 +70,6 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
                             </Form.Group>
 
                             <Form.Group controlId="formPassword" className="mt-3">
-                                <Form.Label>Пароль</Form.Label>
                                 <Form.Control
                                     type="password"
                                     placeholder="Введите пароль"
@@ -84,7 +81,6 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
                             </Form.Group>
 
                             <Form.Group controlId="formConfirmPassword" className="mt-3">
-                                <Form.Label>Подтвердите пароль</Form.Label>
                                 <Form.Control
                                     type="password"
                                     placeholder="Подтвердите пароль"

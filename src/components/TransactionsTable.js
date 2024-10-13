@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../assets/TransactionsTable.css';
+import '../assets/TransactionsTable.scss';
 
 const TransactionsTable = () => {
     const [transactions, setTransactions] = useState([]);
@@ -8,14 +8,12 @@ const TransactionsTable = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
-    // Получаем транзакции с бэкэнда
     useEffect(() => {
-        axios.get('/api/transactions') // Замените на реальный URL вашего бэкэнда
+        axios.get('/operations/all')
             .then(response => setTransactions(response.data))
             .catch(error => console.error('Ошибка при получении транзакций:', error));
     }, []);
 
-    // Фильтруем транзакции
     const filteredTransactions = transactions.filter((tx) => {
         const txDate = new Date(tx.date);
         const inDateRange = (!startDate || txDate >= new Date(startDate)) && (!endDate || txDate <= new Date(endDate));
