@@ -4,6 +4,7 @@ import ProfilePage from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
 import LoginPage from './pages/LoginPage';
 import React, { useState, useEffect } from 'react';
+import NotFoundPage from "./pages/NotFoundPage";
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,10 +20,11 @@ const App = () => {
         <Router>
             <Routes>
                 <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/registration" />} />
-                <Route path="/home" element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} />
-                <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
+                <Route path="/home" element={isAuthenticated ? <HomePage /> : <Navigate to="/registration" />} />
+                <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/registration" />} />
                 <Route path="/registration" element={<RegistrationPage />} />
                 <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} /> {}
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>
     );

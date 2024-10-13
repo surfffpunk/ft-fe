@@ -61,9 +61,14 @@ const LoginPage = ({ setIsAuthenticated }) => {
                             </Form.Group>
 
                             <button className="registration-btn mt-4 w-100" disabled={isLoading}>
-                                {isLoading ? <Spinner animation="border" size="sm" /> : 'Войти'}
+                                {isLoading ? <Spinner animation="border" size="sm"/> : 'Войти'}
                             </button>
+                            <button
+                                className="registration-btn mt-4 w-100"
+                                onClick={() => navigate('/registration')}
+                            >Зарегистрироваться</button>
                         </Form>
+
                     </Card.Body>
                 </div>
             </Container>
