@@ -1,8 +1,8 @@
-import '../assets/RegistrationPage.scss';
 import React, { useState } from 'react';
 import { Form, Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import {registerUser} from '../services/api';
+import { registerUser } from '../services/api';
+import '../assets/RegistrationPage.scss';
 
 const RegistrationPage = ({ setIsRegistered, setUserData }) => {
     const [username, setUsername] = useState('');
@@ -91,13 +91,16 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
                                 />
                             </Form.Group>
 
-                            <button
-                                className="registration-btn mt-4 w-100"
-                                disabled={isLoading}
-                            >
+                            <button className="registration-btn mt-4 w-100" disabled={isLoading}>
                                 {isLoading ? <Spinner animation="border" size="sm" /> : 'Зарегистрироваться'}
                             </button>
                         </Form>
+                        <button
+                            className="registration-btn mt-4 w-100"
+                            onClick={() => navigate('/login')}
+                        >
+                            Я уже зарегистрирован, войти
+                        </button>
                     </Card.Body>
                 </div>
             </Container>

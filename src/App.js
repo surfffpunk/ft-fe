@@ -1,9 +1,8 @@
-import './assets/HomePage.scss';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
-import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
 import React, { useState, useEffect } from 'react';
 
 const App = () => {
@@ -20,10 +19,10 @@ const App = () => {
         <Router>
             <Routes>
                 <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/registration" />} />
-                <Route path="/home" element={isAuthenticated ? <HomePage /> : <Navigate to="/registration" />} />
-                <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/registration" />} />
+                <Route path="/home" element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} />
+                <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
                 <Route path="/registration" element={<RegistrationPage />} />
-                <Route path="*" element={<NotFoundPage />} />
+                <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} /> {}
             </Routes>
         </Router>
     );
