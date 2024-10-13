@@ -4,7 +4,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import '../assets/BalanceAndTransaction.scss';
 
 const BalanceAndTransaction = ({ onAddTransaction }) => {
-    const [wallet, setWallet] = useState({ name: '', balance: 0 });
+    const [wallet, setWallet] = useState({ name: ''});
     const [showTransactionModal, setShowTransactionModal] = useState(false);
     const [transactionDetails, setTransactionDetails] = useState({
         category: '',
@@ -37,7 +37,7 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
         <div className="balance-transaction-container">
             <div className="wallet-info-section">
                 <h4 className="wallet-name">{wallet.name}</h4>
-                <div className="wallet-balance">Баланс: ${wallet.balance}</div>
+                <div className="wallet-balance">Баланс: {wallet.balance}</div>
             </div>
 
             <div className="transaction-section">
