@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,17 +13,41 @@ const ExpenseCharts = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('/operations/all')
-            .then(response => {
-                const transactions = response.data;
-                setExpenses(transactions.filter(tx => tx.type === 'Расход'));
-            })
-            .catch(error => setError('Ошибка при получении данных о транзакциях'))
-            .finally(() => setIsLoading(false));
+        const fetchExpenseData = async () => {
+            const token = localStorage.getItem('jwt');
 
-        axios.get('/wallets/balance')
-            .then(response => setBalance(response.data.balance))
-            .catch(error => setError('Ошибка при получении данных о балансе'));
+            if (!token) {
+                setError('Ошибка: токен не найден.');
+                setIsLoading(false);
+                return;
+            }
+
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.sub;
+
+            try {
+                const expensesResponse = await axios.get(`http://localhost:8081/operations/all?user_id=${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setExpenses(expensesResponse.data);
+
+                const balanceResponse = await axios.get(`http://localhost:8081/wallets/find/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setBalance(balanceResponse.data.balance);
+            } catch (error) {
+                console.error('Ошибка при получении данных:', error);
+                setError('Не удалось загрузить данные.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchExpenseData();
     }, []);
 
     const categoryData = {};

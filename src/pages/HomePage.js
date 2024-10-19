@@ -5,46 +5,86 @@ import TransactionsTable from '../components/TransactionsTable';
 import BalanceAndTransaction from '../components/BalanceAndTransaction';
 import ExpenseCharts from '../components/ExpenseCharts';
 import SideMenu from '../components/SideMenu';
-import {
-    getAllOperations as getTransactions,
-    getWalletById as getBalance,
-    createOperation as addTransactionAPI,
-    updateWallet as updateBalance
-} from '../services/api';
+import { jwtDecode } from 'jwt-decode';
 
 const HomePage = ({ isRegistered }) => {
     const [transactions, setTransactions] = useState([]);
     const [balance, setBalance] = useState(0);
 
     useEffect(() => {
-        if (isRegistered) {
-            const fetchData = async () => {
-                try {
-                    const responseTransactions = await getTransactions();
-                    setTransactions(responseTransactions.data);
+        const fetchTransactionsAndBalance = async () => {
+            const token = localStorage.getItem('jwt');
 
-                    const currentBalance = await getBalance();
-                    setBalance(currentBalance);
-                } catch (error) {
-                    console.error("Ошибка при получении данных:", error);
+            if (!token) {
+                alert('Ошибка: токен не найден.');
+                return;
+            }
+
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.sub;
+
+            try {
+                // Получение всех транзакций
+                const transactionsResponse = await fetch(`http://localhost:8081/operations/all?user_id=${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!transactionsResponse.ok) {
+                    throw new Error('Ошибка при получении транзакций');
                 }
-            };
-            fetchData();
-        }
-    }, [isRegistered]);
+
+                const transactionsData = await transactionsResponse.json();
+                setTransactions(transactionsData);
+
+                const totalBalance = transactionsData.reduce((acc, transaction) => acc + transaction.amount, 0);
+                setBalance(totalBalance);
+
+            } catch (error) {
+                console.error('Ошибка при получении данных:', error);
+                alert(error.message);
+            }
+        };
+
+        fetchTransactionsAndBalance();
+    }, []);
 
     const handleAddTransaction = async (newTransaction) => {
-        const transactionWithId = { ...newTransaction, date: new Date(newTransaction.date) };
+        const token = localStorage.getItem('jwt');
+
+        if (!token) {
+            alert('Ошибка: токен не найден.');
+            return;
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.sub;
 
         try {
-            await addTransactionAPI(transactionWithId);
-            setTransactions(prevTransactions => [...prevTransactions, transactionWithId]);
+            const response = await fetch(`http://localhost:8081/operations/create?user_id=${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(newTransaction),
+            });
 
-            const updatedBalance = balance + newTransaction.amount;
-            await updateBalance(updatedBalance);
-            setBalance(updatedBalance);
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Ошибка при добавлении транзакции: ${errorMessage}`);
+            }
+
+            const addedTransaction = await response.json();
+            setTransactions((prevTransactions) => [...prevTransactions, addedTransaction]);
+
+            setBalance((prevBalance) => prevBalance + addedTransaction.amount);
+            alert('Транзакция успешно добавлена!');
         } catch (error) {
-            console.error("Ошибка при добавлении транзакции:", error);
+            console.error('Ошибка при добавлении транзакции:', error);
+            alert(error.message);
         }
     };
 

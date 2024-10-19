@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, OverlayTrigger, Tooltip, Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { getUserById, getAllWallets, uploadProfilePicture, createWallet } from '../services/api'; // импортируйте ваши API-функции
+import {jwtDecode} from 'jwt-decode';
 import '../assets/ProfilePage.scss';
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState({});
     const [profilePicture, setProfilePicture] = useState(null);
+    const navigate = useNavigate();
     const [showWalletModal, setShowWalletModal] = useState(false);
     const [walletName, setWalletName] = useState('');
     const [walletBalance, setWalletBalance] = useState('');
     const [wallets, setWallets] = useState([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userResponse = await getUserById();
-                setUserData(userResponse.data);
-
-                const walletsResponse = await getAllWallets();
-                setWallets(walletsResponse.data);
-            } catch (error) {
-                console.error('Ошибка при загрузке профиля:', error);
+        const fetchUserData = () => {
+            const token = localStorage.getItem('jwt');
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                setUserData({
+                    id: decodedToken.sub,
+                    username: decodedToken.username,
+                    email: decodedToken.email,
+                });
             }
         };
 
@@ -30,29 +30,53 @@ const ProfilePage = () => {
     }, []);
 
     const handleProfilePictureChange = async (e) => {
-        const file = e.target.files[0];
-        setProfilePicture(URL.createObjectURL(file));
-
-        const formData = new FormData();
-        formData.append('profilePicture', file);
-
-        try {
-            await uploadProfilePicture(formData);
-            console.log('Фото профиля обновлено');
-        } catch (error) {
-            console.error('Ошибка при обновлении фото профиля:', error);
-        }
     };
 
     const handleWalletSubmit = async () => {
+        const token = localStorage.getItem('jwt');
+
+        if (!token) {
+            alert('Ошибка: токен не найден.');
+            return;
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.sub;
+
+        const walletData = {
+            name: walletName,
+            balance: parseFloat(walletBalance),
+            expenses: 0,
+            countOfOperation: 0
+        };
+
         try {
-            const response = await createWallet({ walletName, walletBalance });
-            setWallets([...wallets, response.data]);
+            const response = await fetch(`http://localhost:8081/wallets/create?user_id=${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(walletData),
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Ошибка при добавлении кошелька: ${errorMessage}`);
+            }
+
+            const newWallet = await response.json();
+            setWallets((prevWallets) => [...prevWallets, newWallet]);
             setShowWalletModal(false);
+            setWalletName('');
+            setWalletBalance('');
+
         } catch (error) {
             console.error('Ошибка при добавлении кошелька:', error);
+            alert(error.message);
         }
     };
+
 
     return (
         <div className="profile-page-container">
@@ -94,14 +118,13 @@ const ProfilePage = () => {
                     <button
                         className="analytics-button mt-4 w-100"
                         onClick={() => navigate('/home')}
-                        disabled={wallets.length === 0}
                     >
                         Перейти к аналитике
                     </button>
                 </Card.Body>
             </div>
 
-            {/* Модальное окно для добавления кошелька */}
+            {}
             <Modal show={showWalletModal} onHide={() => setShowWalletModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Добавить кошелек</Modal.Title>

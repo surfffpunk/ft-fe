@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../services/api';
 import '../assets/RegistrationPage.scss';
-
-const RegistrationPage = ({ setIsRegistered, setUserData }) => {
+import '../App.js';
+const RegistrationPage = ({ setIsAuthenticated, setUserData }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,20 +20,31 @@ const RegistrationPage = ({ setIsRegistered, setUserData }) => {
 
         setIsLoading(true);
 
+        const registrationData = { username, email, password };
+
         try {
-            const response = await registerUser({
-                username,
-                email,
-                password
+            const response = await fetch('http://localhost:8081/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(registrationData),
             });
 
-            console.log('Регистрация успешна:', response.data);
-            setUserData(response.data);
-            setIsRegistered(true);
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Ошибка регистрации: ${errorMessage}`);
+            }
+
+            const data = await response.json();
+            setIsAuthenticated(true);
+            setUserData(data);
+            localStorage.setItem('jwt', data.jwt);
             navigate('/profile');
+
         } catch (error) {
-            console.error('Ошибка регистрации:', error);
-            alert('Ошибка регистрации, попробуйте еще раз');
+            console.error('Ошибка при отправке запроса:', error);
+            alert(error.message);
         } finally {
             setIsLoading(false);
         }

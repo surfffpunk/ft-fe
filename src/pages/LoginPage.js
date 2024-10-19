@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { getUserById } from '../services/api';
 import '../assets/RegistrationPage.scss';
 
 const LoginPage = ({ setIsAuthenticated }) => {
@@ -14,18 +13,29 @@ const LoginPage = ({ setIsAuthenticated }) => {
         e.preventDefault();
         setIsLoading(true);
 
+        const loginData = {
+            username,
+            password,
+        };
+
         try {
-            const response = await getUserById({
-                username,
-                password
+            const response = await fetch('http://localhost:8081/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(loginData),
             });
 
-            console.log('Вход успешен:', response.data);
+
+            const data = await response.json();
             setIsAuthenticated(true);
+            localStorage.setItem('jwt', data.jwt);
             navigate('/profile');
+
         } catch (error) {
-            console.error('Ошибка входа:', error);
-            alert('Ошибка входа, попробуйте еще раз');
+            console.error('Ошибка при отправке запроса:', error);
+            alert(error.message);
         } finally {
             setIsLoading(false);
         }
@@ -38,7 +48,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                     <Card.Body>
                         <h3 className="registration-title">Вход</h3>
                         <Form onSubmit={handleLogin}>
-                            <Form.Group controlId="formUsername">
+                            <Form.Group controlId="formUsername" className="mt-3">
                                 <Form.Control
                                     type="text"
                                     placeholder="Введите имя пользователя"
@@ -61,14 +71,13 @@ const LoginPage = ({ setIsAuthenticated }) => {
                             </Form.Group>
 
                             <button className="registration-btn mt-4 w-100" disabled={isLoading}>
-                                {isLoading ? <Spinner animation="border" size="sm"/> : 'Войти'}
+                                {isLoading ? <Spinner animation="border" size="sm" /> : 'Войти'}
                             </button>
                             <button
                                 className="registration-btn mt-4 w-100"
                                 onClick={() => navigate('/registration')}
                             >Зарегистрироваться</button>
                         </Form>
-
                     </Card.Body>
                 </div>
             </Container>

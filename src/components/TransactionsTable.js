@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/TransactionsTable.scss';
+import { jwtDecode } from 'jwt-decode';
 
 const TransactionsTable = () => {
     const [transactions, setTransactions] = useState([]);
@@ -9,9 +10,32 @@ const TransactionsTable = () => {
     const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
-        axios.get('/operations/all')
-            .then(response => setTransactions(response.data))
-            .catch(error => console.error('Ошибка при получении транзакций:', error));
+        const fetchTransactions = async () => {
+            const token = localStorage.getItem('jwt');
+
+            if (!token) {
+                alert('Ошибка: токен не найден.');
+                return;
+            }
+
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.sub;
+
+            try {
+                const response = await axios.get(`http://localhost:8081/operations/all?user_id=${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                setTransactions(response.data);
+            } catch (error) {
+                console.error('Ошибка при получении транзакций:', error);
+                alert('Не удалось загрузить транзакции.');
+            }
+        };
+
+        fetchTransactions();
     }, []);
 
     const filteredTransactions = transactions.filter((tx) => {
