@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 import '../assets/BalanceAndTransaction.scss';
-import { jwtDecode } from 'jwt-decode';
 
 const BalanceAndTransaction = ({ onAddTransaction }) => {
-    const [wallet, setWallet] = useState({ name: '', balance: 0 });
+    const [wallets, setWallets] = useState([]);
     const [showTransactionModal, setShowTransactionModal] = useState(false);
     const [transactionDetails, setTransactionDetails] = useState({
-        category_id: '',
-        isIncome: true,
+        category: '',
+        type: 'Доход',
         amount: '',
         date: new Date().toISOString().slice(0, 10),
+        walletId: '',
     });
 
     useEffect(() => {
-        const fetchWallet = async () => {
+        const fetchWallets = async () => {
             const token = localStorage.getItem('jwt');
 
             if (!token) {
@@ -23,19 +23,17 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
                 return;
             }
 
-            const decodedToken = jwtDecode(token);
-            const userId = decodedToken.sub;
-
             try {
-                const response = await axios.get(`http://localhost:8081/wallets/all?user_id=${userId}`, {
+                const response = await axios.get(`http://localhost:8081/users/find/wallets`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
 
                 if (response.data.length > 0) {
-                    // Предполагаем, что первый кошелек - основной
-                    setWallet(response.data[0]);
+                    setWallets(response.data);
+                } else {
+                    alert('Кошельки не найдены.');
                 }
             } catch (error) {
                 console.error('Ошибка при получении кошельков:', error);
@@ -43,7 +41,7 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
             }
         };
 
-        fetchWallet();
+        fetchWallets();
     }, []);
 
     const handleAddTransaction = async () => {
@@ -54,30 +52,32 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
             return;
         }
 
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.sub;
-
         try {
             const newTransaction = {
-                wallet_id: wallet.id, // ID кошелька
-                category_id: transactionDetails.category_id,
                 amount: parseFloat(transactionDetails.amount),
-                isIncome: transactionDetails.isIncome,
-                description: transactionDetails.description || '',
+                isIncome: transactionDetails.type === 'Доход',
+                walletName: wallets.find(wallet => wallet.id === transactionDetails.walletId)?.name,
+                categoryName: transactionDetails.category,
+                description: '',
                 createdAt: transactionDetails.date,
             };
 
-            const response = await axios.post(`http://localhost:8081/operations/create?user_id=${userId}`, newTransaction, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axios.post(
+                `http://localhost:8081/operations/create?wallet_id=${transactionDetails.walletId}&category_id=${transactionDetails.category}`,
+                newTransaction,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             if (response.status === 200) {
                 onAddTransaction(response.data);
                 alert('Транзакция успешно добавлена!');
                 setShowTransactionModal(false);
+                setTransactionDetails({ category: '', type: 'Доход', amount: '', date: new Date().toISOString().slice(0, 10), walletId: '' }); // Сброс значений формы
             }
         } catch (error) {
             console.error('Ошибка при добавлении транзакции:', error);
@@ -87,9 +87,17 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
 
     return (
         <div className="balance-transaction-container">
-            <div className="wallet-info-section">
-                <h4 className="wallet-name">{wallet.name}</h4>
-                <div className="wallet-balance">Баланс: {wallet.balance}</div>
+            <div className="wallets-list">
+                {wallets.length > 0 ? (
+                    wallets.map((wallet) => (
+                        <div key={wallet.id} className="wallet-info-section">
+                            <h4 className="wallet-name">{wallet.name}</h4>
+                            <div className="wallet-balance">Баланс: {wallet.balance} BYN</div>
+                        </div>
+                    ))
+                ) : (
+                    <p>Кошельки не найдены.</p>
+                )}
             </div>
 
             <div className="transaction-section">
@@ -104,21 +112,36 @@ const BalanceAndTransaction = ({ onAddTransaction }) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
+                        <Form.Group controlId="formWallet">
+                            <Form.Label>Кошелек</Form.Label>
+                            <Form.Control
+                                as="select"
+                                value={transactionDetails.walletId}
+                                onChange={(e) => setTransactionDetails({ ...transactionDetails, walletId: e.target.value })}
+                            >
+                                <option value="">Выберите кошелек</option>
+                                {wallets.map((wallet) => (
+                                    <option key={wallet.id} value={wallet.id}>
+                                        {wallet.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
                         <Form.Group controlId="formCategory">
                             <Form.Label>Категория</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Введите ID категории"
-                                value={transactionDetails.category_id}
-                                onChange={(e) => setTransactionDetails({ ...transactionDetails, category_id: e.target.value })}
+                                placeholder="Введите категорию"
+                                value={transactionDetails.category}
+                                onChange={(e) => setTransactionDetails({ ...transactionDetails, category: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group controlId="formType">
                             <Form.Label>Тип</Form.Label>
                             <Form.Control
                                 as="select"
-                                value={transactionDetails.isIncome ? 'Доход' : 'Расход'}
-                                onChange={(e) => setTransactionDetails({ ...transactionDetails, isIncome: e.target.value === 'Доход' })}>
+                                value={transactionDetails.type}
+                                onChange={(e) => setTransactionDetails({ ...transactionDetails, type: e.target.value })}>
                                 <option>Доход</option>
                                 <option>Расход</option>
                             </Form.Control>

@@ -4,10 +4,14 @@ $picture-bg-color: #3a3a3a;
 $text-color: #ffffff;
 $input-bg-color: #3a3a3a;
 $border-color: #444;
-$button-bg-color: #fff;
+$button-bg-color: #4caf50;
 $button-hover-color: #5a5a5a;
 $button-text-color: #1a1a1a;
+$green-color: #4caf50;
 
+.green-text {
+    color: $green-color;
+}
 .profile-page-container {
     background-color: $background-color;
     min-height: 100vh;
@@ -45,7 +49,7 @@ $button-text-color: #1a1a1a;
         }
 
         .form-label {
-            color: $text-color;
+            color: $green-color;
         }
 
         .form-control {

@@ -1,8 +1,9 @@
 $header-bg-color: #1a1a1a;
 $header-text-color: #fff;
-$button-bg-color: #fff;
+$button-bg-color: #4caf50;
+$button-hover-color: #5a5a5a;
 $button-text-color: #1a1a1a;
-$button-hover-color: #ddd;
+$tracker-green-color: #4caf50;
 
 .header {
     display: flex;
@@ -16,11 +17,21 @@ $button-hover-color: #ddd;
     left: 0;
     width: 100%;
     z-index: 1000;
+    .header-logo {
+        img {
+            height: 50px;
+            width: auto;
+        }
+    }
 }
 
 .header-title {
     font-size: 1.5rem;
     margin: 0;
+}
+
+.tracker-highlight {
+    color: $tracker-green-color;
 }
 
 .header-button {
@@ -41,11 +52,19 @@ $button-hover-color: #ddd;
     .header {
         padding: 0.5rem 1rem;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .header-title {
         font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .header-logo {
+        margin: 10px 0;
+        img {
+            height: 40px;
+        }
     }
 
     .header-button {

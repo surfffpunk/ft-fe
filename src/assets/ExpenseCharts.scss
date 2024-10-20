@@ -1,32 +1,75 @@
 $chart-bg-color: #2b2b2b;
 $chart-text-color: #ffffff;
+$green-color: #4caf50;
+
+.green-text {
+    color: $green-color;
+}
 
 .expense-charts-container {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 1200px;
     margin-top: 20px;
-    gap: 20px;
+}
 
-    @media (max-width: 768px) {
+.wallet-select {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    text-align: center;
+
+
+    label {
+        font-size: 1.2em;
+        color:  $green-color;
+        display: flex;
         flex-direction: column;
         align-items: center;
     }
+
+    select {
+        margin-top: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: $chart-bg-color;
+        color: $chart-text-color;
+        font-size: 1em;
+        cursor: pointer;
+
+        &:hover {
+            background-color: lighten($chart-bg-color, 10%);
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px $green-color;
+        }
+    }
 }
 
-.pie-chart {
-    background-color: $chart-bg-color;
-    padding: 20px;
-    border-radius: 8px;
-    color: $chart-text-color;
-    width: 320px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.charts-wrapper {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
 
-    @media (max-width: 768px) {
-        width: 100%;
-        max-width: 320px;
+    .pie-chart {
+        background-color: $chart-bg-color;
+        padding: 20px;
+        border-radius: 8px;
+        color: $green-color;
+        width: 320px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+        @media (max-width: 768px) {
+            width: 100%;
+            max-width: 320px;
+        }
     }
 }

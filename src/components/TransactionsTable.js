@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/TransactionsTable.scss';
-import { jwtDecode } from 'jwt-decode';
 
 const TransactionsTable = () => {
     const [transactions, setTransactions] = useState([]);
+    const [wallets, setWallets] = useState([]);
+    const [selectedWalletId, setSelectedWalletId] = useState(null);
     const [filterType, setFilterType] = useState('Все');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
-        const fetchTransactions = async () => {
+        const fetchWallets = async () => {
             const token = localStorage.getItem('jwt');
 
             if (!token) {
@@ -18,11 +19,39 @@ const TransactionsTable = () => {
                 return;
             }
 
-            const decodedToken = jwtDecode(token);
-            const userId = decodedToken.sub;
+            try {
+                const response = await axios.get(`http://localhost:8081/users/find/wallets`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                setWallets(response.data);
+                if (response.data.length > 0) {
+                    setSelectedWalletId(response.data[0].id);
+                }
+            } catch (error) {
+                console.error('Ошибка при получении кошельков:', error);
+                alert('Не удалось загрузить кошельки.');
+            }
+        };
+
+        fetchWallets();
+    }, []);
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            if (!selectedWalletId) return;
+
+            const token = localStorage.getItem('jwt');
+
+            if (!token) {
+                alert('Ошибка: токен не найден.');
+                return;
+            }
 
             try {
-                const response = await axios.get(`http://localhost:8081/operations/all?user_id=${userId}`, {
+                const response = await axios.get(`http://localhost:8081/wallets/find/${selectedWalletId}/operations`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -36,12 +65,12 @@ const TransactionsTable = () => {
         };
 
         fetchTransactions();
-    }, []);
+    }, [selectedWalletId]);
 
     const filteredTransactions = transactions.filter((tx) => {
-        const txDate = new Date(tx.date);
+        const txDate = new Date(tx.createdAt); // Используем правильное поле даты
         const inDateRange = (!startDate || txDate >= new Date(startDate)) && (!endDate || txDate <= new Date(endDate));
-        const matchesType = filterType === 'Все' || tx.type === filterType;
+        const matchesType = filterType === 'Все' || (tx.isIncome ? 'Доход' : 'Расход') === filterType;
         return inDateRange && matchesType;
     });
 
@@ -50,6 +79,14 @@ const TransactionsTable = () => {
             <h2 className="transactions-table-title">Таблица транзакций</h2>
 
             <div className="filters">
+                <label>
+                    Кошелек:
+                    <select value={selectedWalletId || ''} onChange={(e) => setSelectedWalletId(e.target.value)} className="filter-select">
+                        {wallets.map(wallet => (
+                            <option key={wallet.id} value={wallet.id}>{wallet.name}</option>
+                        ))}
+                    </select>
+                </label>
                 <label>
                     Тип:
                     <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="filter-select">
@@ -93,10 +130,10 @@ const TransactionsTable = () => {
                     filteredTransactions.map((tx, index) => (
                         <tr key={tx.id}>
                             <td>{index + 1}</td>
-                            <td>{tx.category}</td>
-                            <td>{tx.type}</td>
+                            <td>{tx.categoryName}</td>
+                            <td>{tx.isIncome ? 'Доход' : 'Расход'}</td>
                             <td>{tx.amount > 0 ? `+${tx.amount}` : `${tx.amount}`}</td>
-                            <td>{new Date(tx.date).toLocaleDateString()}</td>
+                            <td>{new Date(tx.createdAt).toLocaleDateString()}</td>
                         </tr>
                     ))
                 ) : (

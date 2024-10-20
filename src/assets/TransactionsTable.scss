@@ -10,6 +10,7 @@ $filter-bg-color: #444;
 $filter-border-color: #555;
 $filter-border-focus-color: #777;
 $font-family: 'Arial', sans-serif;
+$green-color: #4caf50;
 
    .transactions-table-container {
        padding: 20px;
@@ -58,7 +59,7 @@ $font-family: 'Arial', sans-serif;
    }
 
    .transactions-table-title {
-       color: $text-color;
+       color: $green-color;
        margin-bottom: 15px;
        text-align: left;
        font-size: 24px;

@@ -82,15 +82,16 @@ const ProfilePage = () => {
         <div className="profile-page-container">
             <div className="profile-card p-4">
                 <Card.Body>
-                    <h3 className="text-center mb-4 profile-title">Профиль</h3>
+                    <h3 className="text-center mb-4 green-text">Профиль</h3>
                     <div className="text-center mb-4">
                         <OverlayTrigger
                             placement="top"
                             overlay={<Tooltip id="tooltip-top">Нажмите, чтобы загрузить новое фото профиля</Tooltip>}
                         >
-                            <div className="profile-picture-container" onClick={() => document.getElementById('profilePictureInput').click()}>
+                            <div className="profile-picture-container"
+                                 onClick={() => document.getElementById('profilePictureInput').click()}>
                                 {profilePicture ? (
-                                    <img src={profilePicture} alt="Profile" className="profile-picture" />
+                                    <img src={profilePicture} alt="Profile" className="profile-picture"/>
                                 ) : (
                                     <div className="profile-placeholder"></div>
                                 )}
@@ -98,22 +99,24 @@ const ProfilePage = () => {
                                     type="file"
                                     id="profilePictureInput"
                                     onChange={handleProfilePictureChange}
-                                    style={{ display: 'none' }}
+                                    style={{display: 'none'}}
                                 />
                             </div>
                         </OverlayTrigger>
                     </div>
                     <Form.Group controlId="formUsername">
                         <Form.Label className="form-label">Имя пользователя</Form.Label>
-                        <Form.Control type="text" value={userData.username || ''} readOnly className="form-control" />
+                        <Form.Control type="text" value={userData.username || ''} readOnly className="form-control"/>
                     </Form.Group>
 
                     <Form.Group controlId="formEmail" className="mt-3">
                         <Form.Label className="form-label">Email</Form.Label>
-                        <Form.Control type="email" value={userData.email || ''} readOnly className="form-control" />
+                        <Form.Control type="email" value={userData.email || ''} readOnly className="form-control"/>
                     </Form.Group>
 
-                    <button className="add-wallet-button mt-4 w-100" onClick={() => setShowWalletModal(true)}>Добавить кошелек</button>
+                    <button className="add-wallet-button mt-4 w-100" onClick={() => setShowWalletModal(true)}>Добавить
+                        кошелек
+                    </button>
 
                     <button
                         className="analytics-button mt-4 w-100"
